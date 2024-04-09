@@ -131,7 +131,8 @@ user_input_expression_list = [
     ("(-5 + 3 * ({2} / {1}) ** 2) * (2 + 3)", "-10"),                                                    # Placeholder test 1
     ("({5} / {3}) ** 2 - ({4} - 2 * {2})", "820.0"),                                                     # Placeholder test 2
     ("{3} * ({4} + {5}) - ({6} / 2) ** 2", "33.75"),                                                     # Placeholder test 3
-    ("({1} - 2 * {3}) + {5} ** 2", "834.00"),                                                            # Placeholder test 3
+    ("({1} - 2 * {3}) + {5} ** 2", "834.00"),                                                            # Placeholder test 4
+    
 ]
 
 test_expressions(user_input_expression_list)
