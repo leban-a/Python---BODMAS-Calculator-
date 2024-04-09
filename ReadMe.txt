@@ -1,28 +1,3 @@
-Calculating an expression: 
-		Finding Brackets:
-	•	The function starts by calling find_brackets(expression) to identify all the brackets (both opening and closing) within the expression. This function returns a list containing the indices of all opening and closing brackets in the expression.
-		Bracket Processing Loop:
-	•	The function then enters a loop to process brackets until none are left. This loop ensures that expressions within brackets are evaluated first.
-		Bracket Pair Processing:
-	•	Within each iteration of the loop, the function calls get_bracket(brackets, expression) to obtain the start and end indices of a bracket pair.
-	•	It extracts the sub-expression enclosed within the bracket pair.
-	•	If the sub-expression is not reduced to a single value, it continues to evaluate it until it's reduced to a single value. This ensures nested brackets are processed correctly.
-	•	Once the sub-expression is reduced to a single value, it updates the main expression by replacing the sub-expression with its result using the update_expression() function.
-		Update Expression:
-	•	The update_expression() function is called to replace the portion of the expression enclosed within the brackets with its result. This function takes the original expression, the start and end indices of the sub-expression, and the calculated result as arguments.
-	•	The original expression is updated by replacing the sub-expression with its result.
-		Loop Continuation:
-	•	After updating the expression with the result of the bracket pair, the function checks if there are any remaining brackets in the updated expression.
-	•	If there are remaining brackets, it continues the loop to process the next bracket pair.
-	•	If no brackets are left, the loop terminates, indicating that all bracket pairs have been processed.
-		Expression Evaluation:
-	•	Once all bracket pairs are processed and removed from the expression, the function checks if the expression contains only a single value.
-	•	If the expression is reduced to a single value, it means the calculation is complete, and the final result is returned.
-	•	If the expression still contains operators (such as +, -, *, /, **), it calls the calculate_expression() function to perform the calculation.
-		Final Result:
-	•	The final result of the expression is returned to the caller, which could be the calculator() function or another part of the program where the expression was originally passed for evaluation.
-This process ensures that the mathematical expression is evaluated correctly, following the standard rules of arithmetic operations and respecting the precedence of operators. It handles nested expressions within brackets and ensures that the calculation is performed accurately.
-
 The program is designed to handle various types of mathematical expressions, including:
 
 1. Basic arithmetic expressions: Addition (+), subtraction (-), multiplication (*), and division (/).
@@ -53,3 +28,28 @@ Here are the steps taken to validate a user's input and ensure it conforms to th
    - If the input expression is invalid or cannot be processed, appropriate error messages are displayed to the user to indicate the issue. This ensures that users are informed about any errors and can correct their input accordingly.
 
 By following these steps, the program ensures that user input is validated and formatted correctly to be processed as a valid mathematical expression, supporting a wide range of expression types and ensuring accurate calculation results.
+
+Calculating an expression: 
+		Finding Brackets:
+	•	The function starts by calling find_brackets(expression) to identify all the brackets (both opening and closing) within the expression. This function returns a list containing the indices of all opening and closing brackets in the expression.
+		Bracket Processing Loop:
+	•	The function then enters a loop to process brackets until none are left. This loop ensures that expressions within brackets are evaluated first.
+		Bracket Pair Processing:
+	•	Within each iteration of the loop, the function calls get_bracket(brackets, expression) to obtain the start and end indices of a bracket pair.
+	•	It extracts the sub-expression enclosed within the bracket pair.
+	•	If the sub-expression is not reduced to a single value, it continues to evaluate it until it's reduced to a single value. This ensures nested brackets are processed correctly.
+	•	Once the sub-expression is reduced to a single value, it updates the main expression by replacing the sub-expression with its result using the update_expression() function.
+		Update Expression:
+	•	The update_expression() function is called to replace the portion of the expression enclosed within the brackets with its result. This function takes the original expression, the start and end indices of the sub-expression, and the calculated result as arguments.
+	•	The original expression is updated by replacing the sub-expression with its result.
+		Loop Continuation:
+	•	After updating the expression with the result of the bracket pair, the function checks if there are any remaining brackets in the updated expression.
+	•	If there are remaining brackets, it continues the loop to process the next bracket pair.
+	•	If no brackets are left, the loop terminates, indicating that all bracket pairs have been processed.
+		Expression Evaluation:
+	•	Once all bracket pairs are processed and removed from the expression, the function checks if the expression contains only a single value.
+	•	If the expression is reduced to a single value, it means the calculation is complete, and the final result is returned.
+	•	If the expression still contains operators (such as +, -, *, /, **), it calls the calculate_expression() function to perform the calculation.
+		Final Result:
+	•	The final result of the expression is returned to the caller, which could be the calculator() function or another part of the program where the expression was originally passed for evaluation.
+This process ensures that the mathematical expression is evaluated correctly, following the standard rules of arithmetic operations and respecting the precedence of operators. It handles nested expressions within brackets and ensures that the calculation is performed accurately.
