@@ -22,8 +22,6 @@
 #Exit the program by typing exit
 
 
-""""""
-
 import re
 from decimal import Decimal
 import sys 
@@ -86,7 +84,7 @@ def calculator(stored_operations):
     # Get expression from user
     user_input_expression = get_input('get_expression', "Enter an expression to solve:")
     # Validate and format user input
-    validated_expression = format_input(user_input_expression)
+    validated_expression = format_input(user_input_expression, stored_operations)
     working_expression = validated_expression[:]
 
     # Output the result of the calculation
@@ -181,8 +179,6 @@ def store_operations(stored_operations, result, calculation):
     else: 
         # Inform user that result was not stored
         print("The result of your calculation was not stored.")
-
-    print(stored_operations)
     return stored_operations
 
 
@@ -538,12 +534,6 @@ def check_expression(expression,stored_operations):
                     expression.insert(index+1, '*')
                     index -=1
 
-
-
-
-
-
-                
         except:
             pass
 
