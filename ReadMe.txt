@@ -1,3 +1,19 @@
+Update: 
+
+I've Implemented a GUI which take user input through a series of buttons after pressessing '=' your result will displayed. AC will clear inout and DEL will remove the last character. 
+Features that neeed to implements from the orginal:
+Storing and Accessing Results. 
+
+
+The Application can be run with CalculatorGUI.py using the funcrtionlity listed above.
+
+or Calcuulator.py using the command line and full application functionality as listed below. 
+
+
+
+
+
+
 Python BODMAS Calculator 
 
 
