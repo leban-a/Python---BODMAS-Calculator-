@@ -66,11 +66,12 @@ def test_expressions(user_input_expression_list):
 
     # Iterate through the list of user input expressions and their corresponding indices
     for user_input_expression, expected_result in user_input_expression_list:
+        
+        
         # Validate and format the user input expression
         validated_expression = format_input(user_input_expression, stored_operations)
         # Create a copy of the validated expression for reference
         working_expression = validated_expression[:]
-
         try:
             # Solve the expression
             result = solve_expression(working_expression)[0]
@@ -132,7 +133,12 @@ user_input_expression_list = [
     ("({5} / {3}) ** 2 - ({4} - 2 * {2})", "820.0"),                                                     # Placeholder test 2
     ("{3} * ({4} + {5}) - ({6} / 2) ** 2", "33.75"),                                                     # Placeholder test 3
     ("({1} - 2 * {3}) + {5} ** 2", "834.00"),                                                            # Placeholder test 4
-    
+    ("a + b + c", 'Invalid Expression'),                                                                 # Alphabaet expression
+    ("", 'Invalid Expression'),                                                                          # Empty expression
+    ("5 + 6 - 7 * 8 / 9 * (10 + 5**2)","-206.7777777777777777777777778"),                                # Complex expression with all BODMAS operations in reverse order
+
+
+
 ]
 
 test_expressions(user_input_expression_list)

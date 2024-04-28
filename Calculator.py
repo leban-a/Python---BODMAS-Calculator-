@@ -499,72 +499,79 @@ def check_expression(expression,stored_operations):
     
     while index != len(expression):
         index += 1
-        
 
-        if index == 0 and expression[index] == '-' and expression[index+1] == "(":
-            expression.insert(0,'0')
-        try: 
-            if expression[index] == '-' and expression[index+1] == '-' and expression[index+2] == '(':
-                expression[index] = '+'
-                expression.pop(index+1)
-                index -= 1 
-        except:
-            pass
+        try:    
+
+            if index == 0 and expression[index] == '-' and expression[index+1] == "(":
+                expression.insert(0,'0')
+            try: 
+                if expression[index] == '-' and expression[index+1] == '-' and expression[index+2] == '(':
+                    expression[index] = '+'
+                    expression.pop(index+1)
+                    index -= 1 
+            except:
+                pass
+        
+            try: 
+                # Check if the current component is a placeholder for a stored value
+                if expression[index].startswith('{') and expression[index].endswith('}'):
+                    # Retrieve the stored value from the list of stored operations
+                    _ , value = stored_operations[int(expression[index].strip("{}"))-1]
+                    
+                    
+                    # Check if the previous component is a negative sign
+                    if expression[index-1][0] == '-':
+                        # Change the sign of the stored value to positive
+                        value = abs(value)
+                    # Replace the placeholder with the actual value
+                    expression[index] = value
+                
+                    if expression[index-1].isdecimal() and index != 0 or expression[index-1]==')':
+                        expression.insert(index-1, '*')
+                        index -=1
+
+
+                    elif expression[index+1].isdecimal() or expression[index+1]== '(':
+                        expression.insert(index+1, '*')
+                        index -=1
+
+            except:
+                pass
+
+            try: 
+                # Check for specific cases where a multiplication operator is missing
+                if (expression[index] == ')' and expression[index + 1] == '(') : 
+                    # Insert a multiplication operator between adjacent parentheses
+                    expression.insert(index + 1, '*')
+                    index -=1
+
+                elif (expression[index].isdecimal() and expression[index + 1] == '(') or \
+                    (expression[index + 1].isdecimal() and expression[index] == ')'):
+                    # Insert a multiplication operator between a number and a following parenthesis or vice versa
+                    expression.insert(index + 1, '*')
+                    index -=1
+            except:
+                pass
+
+            # Check for specific cases where a negative sign should be part of a number
+            if index - 1 <= -1: 
+                continue
+            # Handle cases where a negative sign should be part of a number
+            elif expression[index-1] == '-' and (index == 1 or expression[index-2] in ['(','**', '/', '*', '+', '-']):
+                expression[index] =  expression[index-1] + expression[index] 
+                expression.pop(index-1)
+                index -=1
+
     
-        try: 
-            # Check if the current component is a placeholder for a stored value
-            if expression[index].startswith('{') and expression[index].endswith('}'):
-                # Retrieve the stored value from the list of stored operations
-                _ , value = stored_operations[int(expression[index].strip("{}"))-1]
-                
-                
-                # Check if the previous component is a negative sign
-                if expression[index-1][0] == '-':
-                    # Change the sign of the stored value to positive
-                    value = abs(value)
-                # Replace the placeholder with the actual value
-                expression[index] = value
-            
-                if expression[index-1].isdecimal() and index != 0 or expression[index-1]==')':
-                    expression.insert(index-1, '*')
-                    index -=1
-
-
-                elif expression[index+1].isdecimal() or expression[index+1]== '(':
-                    expression.insert(index+1, '*')
-                    index -=1
+            # Handle cases where a negative sign should be part of a number
+            if len(expression) ==  2 and expression[index] == 0 and expression[index].isdecimal():
+                expression[index]=expression[index-1]+expression[index]
+                expression.pop(index-1)
+                index -=1
+    
 
         except:
             pass
-
-        try: 
-            # Check for specific cases where a multiplication operator is missing
-            if (expression[index] == ')' and expression[index + 1] == '(') : 
-                # Insert a multiplication operator between adjacent parentheses
-                expression.insert(index + 1, '*')
-                index -=1
-
-            elif (expression[index].isdecimal() and expression[index + 1] == '(') or \
-                 (expression[index + 1].isdecimal() and expression[index] == ')'):
-                # Insert a multiplication operator between a number and a following parenthesis or vice versa
-                expression.insert(index + 1, '*')
-                index -=1
-        except:
-            pass
-
-        if index - 1 <= -1: 
-            continue
-        # Handle cases where a negative sign should be part of a number
-        elif expression[index-1] == '-' and (index == 1 or expression[index-2] in ['(','**', '/', '*', '+', '-']):
-            expression[index] =  expression[index-1] + expression[index] 
-            expression.pop(index-1)
-            index -=1
-        if len(expression) ==  2 and expression[index] == 0 and expression[index].isdecimal():
-            expression[index]=expression[index-1]+expression[index]
-            expression.pop(index-1)
-            index -=1
-
-        
 
         
     return expression
