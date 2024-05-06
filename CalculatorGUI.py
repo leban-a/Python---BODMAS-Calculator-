@@ -22,6 +22,8 @@ class CalculatorGUI:
         self.buttons_pressed = ""
         self.memory_access = None
         self.memory_displayed = False
+        self.tape_records = []
+        self.tape_displayed = False
 
         self.buttons = {
         "AC": {"command": "clear", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
@@ -70,11 +72,10 @@ class CalculatorGUI:
             result = "Invalid Expression"
         
         print(f"Expression: {validated_expression} = {result}")
+
+        self.tape_records.append((validated_expression, result))
         
         return validated_expression, result
-
-# Create a variable to store the buttons pressed
-
 
 
     def update_display_after_delay(self, delay_text, delay, text_after_delay):
@@ -98,6 +99,7 @@ class CalculatorGUI:
                 self.memory_add_button.config(state='normal')  # Update the button's state
 
             self.buttons_pressed = ""
+        
 
         elif operation == 'AC':
             self.buttons_pressed = ""
@@ -241,17 +243,62 @@ class CalculatorGUI:
                 self.buttons['\u2193']['button'].config(state='disabled')
             self.buttons['\u2191']['button'].config(state='normal')
     
-                
+        elif operation == 'TAPE':
+
+            if self.tape_displayed:
+                self.tape.destroy()
+                self.tape_displayed = False
+            else:
+
+                self.tape_displayed = True
+                self.display_tape()
+                self.window.focus_set()
+
 
         else:
             self.buttons_pressed += str(operation)
             self.display.config(text=self.buttons_pressed)
-            self.memory_add_button.config(state='disabled')  # Update the button's state
+            self.memory_add_button.config(state='disabled')  
 
 
 
-    
-        
+    def update_tape(self):
+        for widget in self.tape_frame.winfo_children():
+            widget.destroy()
+
+        for index, operation in enumerate(self.tape_records):
+            tape_label = tk.Label(self.tape_frame, text=f"{' '.join(operation[0])}\n= {operation[1]}", anchor="w", width=30, height=2, padx=5, border=0, pady=15)
+            tape_label.grid(row=index, column=0)
+
+        self.tape.after(1000, self.update_tape)  
+
+
+    def display_tape(self):
+        if not hasattr(self, 'tape') or not self.tape.winfo_exists():
+            self.tape = tk.Toplevel(self.window)
+            self.tape.title("Tape")
+            self.tape.geometry("300x400+450+0")
+            self.tape.resizable(False, False)
+
+            self.canvas = tk.Canvas(self.tape)
+            self.scrollbar = tk.Scrollbar(self.tape, orient="vertical", command=self.canvas.yview)
+
+            self.tape_frame = tk.Frame(self.canvas)
+            self.tape_frame.bind("<Configure>", lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")))
+
+            self.canvas.create_window((0, 0), window=self.tape_frame, anchor="nw")
+
+            self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+            self.canvas.pack(side="left", fill="both", expand=True)
+            self.scrollbar.pack(side="right", fill="y")
+
+            self.clear_button = tk.Button(self.tape, text="Clear", command=lambda: self.tape_records.clear())
+            self.canvas.create_window(290, 390, window=self.clear_button, anchor="se")
+
+
+        self.update_tape()  
+
         
     def calculator_GUI(self):
         # Create a frame
