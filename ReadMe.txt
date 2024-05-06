@@ -1,8 +1,34 @@
+Todo: 
+Tape Functionality
+Refactor GUI 
+Comment GUI
+
 Update: 
 
-I've Implemented a GUI which take user input through a series of buttons after pressessing '=' your result will displayed. AC will clear inout and DEL will remove the last character. 
-Features that neeed to implements from the orginal:
-Storing and Accessing Results. 
+The GUI has been implemented with memory functionality: 
+
+M - will display a box with stored operations and the result: 
+
+Arrow buttons - are used to navigate the stored operations
+
+M+ - will insert the result of a stored operation while the memory window is displayed the current memeory object will be inserted otherwise
+otherwise the last stored result will be used
+
+M- will remove the stored operation from memory where the memeory window is opened or the last stored opertion
+
+MR - will recall the last operation stored or the operation displayed in the memeory window
+
+MC - will clear all stored operations
+
+M - Will display and hide the memeory window
+
+
+after performing a valid operation the option to store M+ will be available 
+
+After pressing = and recieving a valid result placing an operator followed by a digit the calculator will automatically insert the previous result at the beginning of the expression
+(example result = 5, new expression * 5 calculated expression 5 * 5)
+
+
 
 
 The Application can be run with CalculatorGUI.py using the funcrtionlity listed above.
