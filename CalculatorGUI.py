@@ -141,7 +141,7 @@ class CalculatorGUI:
         elif operation == 'M':
             if self.memory_displayed == False:
                 self.memory_access= len(stored_operations) - 1
-                text = f'{' '.join(stored_operations[self.memory_access][0])}\n = {stored_operations[self.memory_access][1]}' if stored_operations else 'Memory is empty' if not stored_operations else 'Memory is empty'
+                text = f"{' '.join(stored_operations[self.memory_access][0])}\n = {stored_operations[self.memory_access][1]}" if stored_operations else 'Memory is empty' 
                 self.display_memory_label = tk.Label(self.window, text=text,anchor="w",width=40,height=2,padx=5, pady=10,border=3, relief='ridge',)
                 self.display_memory_label.grid(row=2, column=0)
                 self.memory_displayed = True
