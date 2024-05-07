@@ -30,7 +30,7 @@ class CalculatorGUI:
         "(": {"command": "open_paren", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
         ")": {"command": "close_paren", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
         "/": {"command": "divide", "state": "normal", "bg": "orange", "key_pressed_bg": "grey"},
-        "^": {"command": "power", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
+        "**": {"command": "power", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
         "7": {"command": "seven", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
         "8": {"command": "eight", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
         "9": {"command": "nine", "state": "normal", "bg": "white", "key_pressed_bg": "grey"},
@@ -89,7 +89,7 @@ class CalculatorGUI:
 
         if operation == '=':
 
-            if self.buttons_pressed[0] in ['+', '-', '*', '/', '^', '('] and self.result:
+            if self.buttons_pressed[0] in ['+', '-', '*', '/', '**', '('] and self.result:
                 self.buttons_pressed = self.result + self.buttons_pressed
             
             self.working_expression, self.result = self.validate_and_solve_expression(self.buttons_pressed, stored_operations)
@@ -142,7 +142,7 @@ class CalculatorGUI:
             if self.memory_displayed == False:
                 self.memory_access= len(stored_operations) - 1
                 text = f'{' '.join(stored_operations[self.memory_access][0])}\n = {stored_operations[self.memory_access][1]}' if stored_operations else 'Memory is empty' if not stored_operations else 'Memory is empty'
-                self.display_memory_label = tk.Label(self.window, text=text,anchor="w",width=40, height=2,padx=5, border=3, relief='ridge',)
+                self.display_memory_label = tk.Label(self.window, text=text,anchor="w",width=40,height=2,padx=5, pady=10,border=3, relief='ridge',)
                 self.display_memory_label.grid(row=2, column=0)
                 self.memory_displayed = True
             else:
@@ -308,7 +308,7 @@ class CalculatorGUI:
 
     
         # Create a label for the display
-        self.display = tk.Label(self.window, text="0",anchor="w",padx=5, width=40, height=3, border=3, relief='ridge',)
+        self.display = tk.Label(self.window, text="0",anchor="w",padx=5,pady=5, width=40, height=3, border=3, relief='ridge',)
         self.display.grid(row=0, column=0)
 
 
