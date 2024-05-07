@@ -1,11 +1,14 @@
 Todo: 
-Tape Functionality
+Implement Keyboard Input
 Refactor GUI 
 Comment GUI
 
 Update: 
 
-The GUI has been implemented with memory functionality: 
+The GUI has been implemented with tape functionality: 
+
+TAPE - will open a new window which displays previous calculations,
+
 
 M - will display a box with stored operations and the result: 
 
@@ -21,6 +24,8 @@ MR - will recall the last operation stored or the operation displayed in the mem
 MC - will clear all stored operations
 
 M - Will display and hide the memeory window
+
+Arrow Keys - Wiill allow the user to step through memory items.
 
 
 after performing a valid operation the option to store M+ will be available 
