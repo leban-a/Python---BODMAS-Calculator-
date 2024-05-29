@@ -95,12 +95,12 @@ def test_expressions(user_input_expression_list):
 
 # Stored operations
 stored_operations = [
-    (['-', '1', '**', '4', '/', '23'], '-5.0'),                                 # Placeholder test 1
-    (['-', '5', '+', '3', '*', '(', '7', '/', '2', ')', '**', '2'], '-5.0'),    # Placeholder test 2
+    (['-', '1', '^', '4', '/', '23'], '-5.0'),                                 # Placeholder test 1
+    (['-', '5', '+', '3', '*', '(', '7', '/', '2', ')', '^', '2'], '-5.0'),    # Placeholder test 2
     (['15', '/', '3'], '1.0'),                                                  # Placeholder test 3
     (['3', '*', '(', '4', '+', '5', ')'], '11.0'),                              # Placeholder test 4
-    (['10', '-', '2', '*', '3', '+', '5', '**', '2'], '29.0'),                  # Placeholder test 5
-    (['-', '1', '**', '4', '/', '23'], '-5.0'),                                 # Placeholder test 6 
+    (['10', '-', '2', '*', '3', '+', '5', '^', '2'], '29.0'),                  # Placeholder test 5
+    (['-', '1', '^', '4', '/', '23'], '-5.0'),                                 # Placeholder test 6 
 
 ]
 
@@ -110,14 +110,14 @@ user_input_expression_list = [
     
     
     ("(500 / 121 / 165 * 0.5 - 10000 - -54232423) * (600 - -6) - -6", "32858788351.58827948910593539"),  # Complex expression with multiple operations
-    ("(600 - -650) - -2343 / 32 * (73 - -5 ** 5 / 7 ** 5) * (400)", "2144683.054679597786636520497"),    # Complex expression with nested operations and exponentiation
-    ("70054 / 454 * (54545) + (5 ** 30)", "931322574615486932134.7577093"),                              # Complex expression with large exponentiation
+    ("(600 - -650) - -2343 / 32 * (73 - -5 ^ 5 / 7 ^ 5) * (400)", "2144683.054679597786636520497"),    # Complex expression with nested operations and exponentiation
+    ("70054 / 454 * (54545) + (5 ^ 30)", "931322574615486932134.7577093"),                              # Complex expression with large exponentiation
     ("(2 + 3) * 4", "20"),                                                                               # Simple expression with addition and multiplication
     ("1.5 * (3 + 4)", "10.5"),                                                                           # Expression with decimal multiplication
     ("10 / 2 - 3", "2"),                                                                                 # Simple expression with division and subtraction
     ("5 + -3", "2"),                                                                                     # Simple expression with addition and unary negation (Corrected to "2")
-    ("2 ** 3", "8"),                                                                                     # Exponential expression
-    ("2 ** (3 + 1)", "16"),                                                                              # Exponential expression with addition
+    ("2 ^ 3", "8"),                                                                                     # Exponential expression
+    ("2 ^ (3 + 1)", "16"),                                                                              # Exponential expression with addition
     ("2 * (3 + 4)", "14"),                                                                               # Expression with multiplication and addition
     ("2 * 3 + 4", "10"),                                                                                 # Expression with multiplication and addition
     ("2.5 * 2", "5.0"),                                                                                  # Decimal multiplication
@@ -128,14 +128,14 @@ user_input_expression_list = [
     ("-(3 + 2) * 4", "-20"),                                                                             # Expression with unary negation
     ("2(3 * 4)", "24"),                                                                                  # Expression with implicit multiplication
     ("5 * (3 + 4)", "35"),                                                                               # Expression with multiplication and addition
-    ("(2 * 3) ** 2 + 4", "40"),                                                                          # Expression with exponentiation("-({1} ** 4 / 23) - -5 * (400 / {3})", "-5.0"),                  
-    ("(-5 + 3 * ({2} / {1}) ** 2) * (2 + 3)", "-10"),                                                    # Placeholder test 1
-    ("({5} / {3}) ** 2 - ({4} - 2 * {2})", "820.0"),                                                     # Placeholder test 2
-    ("{3} * ({4} + {5}) - ({6} / 2) ** 2", "33.75"),                                                     # Placeholder test 3
-    ("({1} - 2 * {3}) + {5} ** 2", "834.00"),                                                            # Placeholder test 4
+    ("(2 * 3) ^ 2 + 4", "40"),                                                                          # Expression with exponentiation("-({1} ^ 4 / 23) - -5 * (400 / {3})", "-5.0"),                  
+    ("(-5 + 3 * ({2} / {1}) ^ 2) * (2 + 3)", "-10"),                                                    # Placeholder test 1
+    ("({5} / {3}) ^ 2 - ({4} - 2 * {2})", "820.0"),                                                     # Placeholder test 2
+    ("{3} * ({4} + {5}) - ({6} / 2) ^ 2", "33.75"),                                                     # Placeholder test 3
+    ("({1} - 2 * {3}) + {5} ^ 2", "834.00"),                                                            # Placeholder test 4
     ("a + b + c", 'Invalid Expression'),                                                                 # Alphabaet expression
     ("", 'Invalid Expression'),                                                                          # Empty expression
-    ("5 + 6 - 7 * 8 / 9 * (10 + 5**2)","-206.7777777777777777777777778"),                                # Complex expression with all BODMAS operations in reverse order
+    ("5 + 6 - 7 * 8 / 9 * (10 + 5^2)","-206.7777777777777777777777778"),                                # Complex expression with all BODMAS operations in reverse order
 
 
 
