@@ -25,11 +25,19 @@
 import re
 from decimal import Decimal
 import sys 
+import ast
+import os
 
-
+caller = 'CLI'
 # List to store previous calculations
 stored_operations = []
+expression_stack =[]
+global step
+step = 1
 
+
+endline = '\033[0m'
+underline = '\033[4m'
 # Function to launch the application
 def main():
     """
@@ -110,22 +118,85 @@ def output_result(validated_expression, user_input_expression, working_expressio
     try: 
         # Solve the expression
         result = solve_expression(working_expression)[0]
-    except:
+    except Exception as e:
+        print("Error: ", e)
         # Handle invalid expression
         result = "Invalid Expression"
 
     if result == "Invalid Expression":
         # Display error message for invalid expression
-        print(f"\n\nInput:\n{user_input_expression}\nOutput:\n{' '.join(validated_expression)}\n\n{result}")
+        print(f"\n\nInput:\n{user_input_expression}\nValidated Input:\n{' '.join(validated_expression)}\n\n{result}")
     else:
         # Display validated expression and result
-        print(f"\nUser Input: \n{user_input_expression}\n\nValidated Expression: \n{' '.join(validated_expression)} = {result}\n")
+        print(f"Validated Expression: \n{' '.join(validated_expression)} = {result}\n")
         # Store the calculation
-    stored_operations = store_operations(stored_operations, result, validated_expression)
+        stored_operations = store_operations(stored_operations, result, validated_expression)
 
+        # Ask user if they want to view the expression proofs
+        view_expression_proofs(expression_stack)
+        print(f"\n\nValidated Expression: \n{' '.join(validated_expression)} = {result}\n")
+
+    expression_stack.clear()
+
+
+
+
+def view_expression_proofs(expression_stack):
+    k = 5
+    """
+    Function to view the steps of the expression evaluation.
+
+    Args:
+    - expression_stack (list): List containing the steps of the expression evaluation.
+
+    Returns:
+    - None
+    """
+
+
+    # Ask user if they want to view the expression proofs
+    while True: 
+        user_input = input("\nWould you like to view the workings of the expression evaluation? (Y/N): ")
+        if user_input.lower() == 'n':
+            break
+        elif user_input.lower() == 'y':
+
+
+    
+            while True:
+                user_input = input("Would you like to see a simplified version of the steps? (Y/N): ")
+                print(user_input)
+                if user_input.lower() == 'y':
+                    print("Here are the steps of the expression evaluation:\n")
+                    for index, step in enumerate(expression_stack):
+                        if 'Step' in step:
+                            print(step)
+                    return
+                elif user_input.lower() == 'n':
+                    print("'\nHere are the steps of the expression evaluation:\n")
+                    for index, step in enumerate(expression_stack):
+                        print(step)
+                        if index % 4 == 0:
+                            while True:
+                                user_input = input("\nPress Enter to continue or stop.: ")
+                                if user_input == '':
+                                    break
+                                elif user_input.lower() == 'stop':
+                                    return
+                                else:
+                                    continue
+
+                    return
+                else:
+                    continue
+
+
+        else:
+            continue
+    
 
 # Function to access previously stored calculations
-def access_stored_operations():
+def access_stored_operations(caller = 'CLI'):
     """
     Function to access previously stored calculations. It displays stored
     calculations along with their IDs, allowing users to refer to them in
@@ -137,22 +208,49 @@ def access_stored_operations():
     Returns:
     - None
     """
-    if len(stored_operations) > 0:
-        # Display stored calculations
-        print("These are your stored calculations:\n\n")
-        print("IDs\n")
-        for index, pack in enumerate(stored_operations):
-            calculation = pack[0]
-            result = pack[1]
-            print(f"{index+1}: {' '.join(calculation)} = {result}\n")
-        print('To use the result of any of the calculations listed, input the respective ID encased in curly brackets example: \'{1}\'.\nEnsuring that the an operator is placed before or after where needed.')
-    else: 
-        # Inform user of no stored calculations
-        print("You have no stored calculations")
+
+    try:
+        stored_operations_file = open("stored_operations.txt", "r")
+    except FileNotFoundError:
+        stored_operations_file = open("stored_operations.txt", "w")
+        stored_operations_file.close()
+        stored_operations_file = open("stored_operations.txt", "r")
+
+
+
+
+    if  os.stat("stored_operations.txt").st_size != 0:
+
+        stored_operations.clear()
+    
+        for line in stored_operations_file.readlines():
+            print(line)
+            operation, result = line.strip('\n').split("=")
+            print(operation)
+            stored_operations.append([operation, result])
+
+    stored_operations_file.close()
+
+
+    
+
+    if caller == 'CLI':
+        if len(stored_operations) > 0:
+            # Display stored calculations
+            print("These are your stored calculations:\n\n")
+            print("IDs\n")
+            for index, pack in enumerate(stored_operations):
+                calculation = pack[0]
+                result = pack[1]
+                print(f"{index+1}: {' '.join(calculation)} = {result}\n")
+            print('To use the result of any of the calculations listed, input the respective ID encased in curly brackets example: \'{1}\'.\nEnsuring that the an operator is placed before or after where needed.')
+        else: 
+            # Inform user of no stored calculations
+            print("You have no stored calculations")
 
 
 # Function to store calculation results
-def store_operations(stored_operations, result, calculation):
+def store_operations(stored_operations, result=None, calculation= None, caller = 'CLI'):
     """
     Function to store calculation results based on user input. It prompts the
     user whether they want to store the result. If the user chooses to store
@@ -168,17 +266,51 @@ def store_operations(stored_operations, result, calculation):
     Returns:
     - stored_operations (list): Updated list of stored calculations.
     """
-    instruction = f"Would you like to store the result: {result}"
-    # Ask user if they want to store the result
-    store_operation = get_input('store', instruction) 
+
+    if caller == 'CLI':
+        instruction = f"Would you like to store the result: {result}"
+        # Ask user if they want to store the result
+
+    
+        store_operation = get_input('store', instruction) 
      
-    if store_operation:
-        # Store the result
-        stored_operations.append((calculation, result))
-        print("The results of your calculation are now stored. \nTo access and use these values type \'History\' when prompted.")
-    else: 
-        # Inform user that result was not stored
-        print("The result of your calculation was not stored.")
+        if store_operation:
+            # Store the result
+        
+                stored_operations.append((calculation, result))
+                stored_operations_file = open("stored_operations.txt", "w")
+
+        
+                for operation, result in stored_operations:
+                    stored_operations_file.write(f"{operation} = {result}\n")
+                
+                stored_operations_file.close()
+
+                # Inform user that result was stored
+                print("The results of your calculation are now stored. \nTo access and use these values type \'History\' when prompted.")
+        else:
+
+            # Inform user that result was not stored
+            print("The result of your calculation was not stored.")
+
+
+
+    elif caller == 'GUI':
+        stored_operations_file = open("stored_operations.txt", "w")
+        for operation, result in stored_operations:
+            print(operation)
+            stored_operations_file.write(f"{''.join(operation)} = {result}\n")   
+        stored_operations_file.close()
+        
+
+        
+            
+
+
+        
+
+
+
     return stored_operations
 
 
@@ -267,6 +399,17 @@ def get_input(type, instructions=None):
                 return False
             else: 
                 input_valid = False
+        
+        elif type == 'view_expression_proofs':
+            print("IN VIEW EXPRESSION PROOFS")
+            if user_input.lower() in ['y', 'yes']:
+                input_valid = True
+                return True
+            elif user_input.lower() in ['n', 'no']:
+                input_valid = True
+                return False
+            else: 
+                input_valid = False
 
         # Notify if input is not recognized
         if input_valid == False:
@@ -289,6 +432,10 @@ def reset():
 
 # Function to solve an expression
 def solve_expression(expression):
+    global step
+    step = 1
+    
+    expression_stack.append(f'\n\nExpression to Solve: {' '.join(expression)}')
     """
     Function to solve a mathematical expression.
 
@@ -305,27 +452,40 @@ def solve_expression(expression):
     while len(expression) != 1:
         # Continue processing brackets until none are left
         while brackets:
+            expression_stack.append(f'\n\n- Perform operations on parentheses - \n\n')
             # Get the start and end indices of a bracket pair
             start, end = get_bracket(brackets, expression)
             # Extract the sub-expression within the brackets
-            sub_expression = expression[start + 1:end] 
+
+            sub_expression = expression[start + 1:end]
+            expression_stack.append(f'\nSolve Parentheses: ({' '.join(sub_expression)})\n')
+
+            
 
             # Continue evaluating the sub-expression until it's reduced to a single value
             while len(sub_expression) != 1:
                 # If the main expression is already reduced to a single value, use the sub-expression itself
                 sub_expression = sub_expression if len(expression) == 1 else calculate_expression(sub_expression)
+            expression_stack.pop()
+
             
             # Update the expression by replacing the sub-expression with its result
             expression = update_expression(expression=expression, sub_expression=sub_expression, start=start, end=end)
+
             # Find brackets again in the updated expression
             brackets = find_brackets(expression)
+            if not brackets:
+                expression_stack.append(f'\n\n- Perform operations on the remaining expression - \n\n')
+        
 
         # Calculate the expression if it still contains operators
         expression = expression if len(expression) == 1 else calculate_expression(expression)
-
+        
     # Return the final result
     result = expression
+    expression_stack.pop()
     return result
+    
 
 
 
@@ -340,12 +500,16 @@ def calculate_expression(expression):
     Returns:
     - Updated expression after the operation.
     """
+
     # Perform the operation and get the result along with the index of the operator
-    result, index = perform_operation(expression)
+    result, index = perform_operation(expression)  
+
+
     # Replace the operator with the result in the expression
     expression[index] = str(result)
     # Update the expression after the operation
     expression = update_expression(expression, index)
+
     # Return the updated expression
     return expression
 
@@ -368,14 +532,27 @@ def update_expression(expression, index=None, sub_expression=None, start=None, e
     """
     # If sub_expression is provided, replace the portion of the expression with the result
     if sub_expression: 
+        if caller == 'GUI':
+        
+            expression_stack.append(f'\nParentheses result returned: {' '.join(expression[:start] + [str(sub_expression[0])] + expression[end + 1:])}\n')
+        else: 
+            expression_stack.append(f'\nParentheses result returned: {' '.join(expression[:start] + [underline + str(sub_expression[0]) + endline] + expression[end + 1:])}\n')
+
         return expression[:start] + [sub_expression[0]] + expression[end + 1:]
     # If index is provided, replace the operator with the result in the expression
     else: 
-        return expression[:index - 1] + [expression[index]] + expression[index + 2:]
+
+        if caller == 'GUI':
+            expression_stack.append(f'\nOperation result returned: {' '.join(expression[:index - 1] + [str(expression[index])] + expression[index + 2:])}\n')
+        else:
+            expression_stack.append(f'\nOperation result returned: {' '.join(expression[:index - 1] + [underline + str(expression[index]) + endline] + expression[index + 2:])}\n')
+    return expression[:index - 1] + [expression[index]] + expression[index + 2:]
 
 
 # Function to perform a specific operation in an expression
 def perform_operation(expression):
+    global step
+
     """
     Perform a specific operation in an expression.
 
@@ -386,23 +563,29 @@ def perform_operation(expression):
     - Tuple containing the result of the operation and the index of the operator.
     """
     # Extract operators from the expression
-    operators = re.findall(r'\(|\)|\*\*|[*/+\-]', ''.join(expression))
+    operators = re.findall(r'\(|\)|\^|[*/+\-]', ''.join(expression))
+
+
     
     # Iterate through each symbol in the list of symbols
-    for i in ['**', '/', '*', '+', '-'] :
+    for i in ['^', '/', '*', '+', '-'] :
         # Check if the symbol exists in the operators list
         if i not in operators:
             continue
-
+        
         # Iterate through the expression to find the index of the symbol
         for index, n in enumerate(expression):
             # If the symbol is found
             if i == n:
-                # Define the operation based on the symbol
-                if expression[index] == '**': 
-                    operation = lambda a,b: a**b    
-                elif expression[index] == '/': 
 
+                # Adjust for left to right precedence
+                if i == '+' and '-' in expression[:index]: break 
+                if i == '/' and '*' in expression[:index]: break
+
+                # Define the operation based on the symbol
+                if expression[index] == '^': 
+                    operation = lambda a,b: a**b  
+                elif expression[index] == '/': 
                     operation = lambda a,b: a/b
                 elif expression[index] == '*': 
                     operation = lambda a,b: a*b
@@ -410,11 +593,18 @@ def perform_operation(expression):
                     operation = lambda a,b: a+b
                 elif expression[index] == '-': 
                     operation = lambda a,b: a-b
+
+                
         
                 # Get the operands (numbers) before and after the operator
                 a = expression[index - 1]
                 b = expression[index + 1]
+                print(step,'Step')
+                expression_stack.append (f'\n\nStep {step}:\n{a} {expression[index]} {b} =  {operation(Decimal(a), Decimal(b))}') 
+                
+                step += 1
 
+                
                 # Perform the operation on the operands and return the result along with the index of the operator
                 return operation(Decimal(a), Decimal(b)), index
 
@@ -478,7 +668,7 @@ def format_input(user_input,stored_operations):
     """
     # Use regular expression to find all valid components of the expression,
     # including operators, numbers, decimal numbers, and placeholders for stored values
-    formatted_input = re.findall(r'\(|\)|\*\*|[*/+\-]|{\d+}|\d+\.\d+|\d+|^\-\d+|^\-\d+\.\d+|\-\-', user_input)
+    formatted_input = re.findall(r'\d+\.\d+E\+\d+|\d+E\+\d+|\(|\)|\^|[*/+\-]|{\d+}|\d+\.\d+|\d+|^\-\d+\.\d+|^\-\d+|\-\-', user_input)
     # Check and modify the expression for validity
     return check_expression(formatted_input,stored_operations)
 
@@ -557,7 +747,7 @@ def check_expression(expression,stored_operations):
             if index - 1 <= -1: 
                 continue
             # Handle cases where a negative sign should be part of a number
-            elif expression[index-1] == '-' and (index == 1 or expression[index-2] in ['(','**', '/', '*', '+', '-']):
+            elif expression[index-1] == '-' and (index == 1 or expression[index-2] in ['(','^', '/', '*', '+', '-']):
                 expression[index] =  expression[index-1] + expression[index] 
                 expression.pop(index-1)
                 index -=1
@@ -577,6 +767,9 @@ def check_expression(expression,stored_operations):
     return expression
 
 
+    
+
+    
 # Function to exit the program
 def exit_program():
     """
